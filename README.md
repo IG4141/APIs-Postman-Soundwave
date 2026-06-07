@@ -1,4 +1,4 @@
-# Actividad: Creación de APIs y Testeo con Postman
+# Creación de APIs y Testeo con Postman
 
 ---
 
@@ -21,9 +21,9 @@ Se implementaron tres nuevos endpoints en el archivo `index.js` del proyecto Sou
 }
 ```
 
-**Resultado:** `201 Created`. La API inserta el artista en PostgreSQL con `INSERT INTO artista RETURNING *` y limpia el caché de Redis.
+**Resultado:** 
 
-<!-- Captura -->
+<img width="927" height="269" alt="entrega 1" src="https://github.com/user-attachments/assets/11647cf2-72b9-4937-8db6-ac9f70ed29fc" />
 
 ---
 
@@ -38,9 +38,10 @@ Se implementaron tres nuevos endpoints en el archivo `index.js` del proyecto Sou
 }
 ```
 
-**Resultado:** `200 OK`. La API ejecuta `UPDATE cancion SET duracion_segundos = $1 WHERE id_cancion = $2 RETURNING *` y devuelve el registro actualizado.
+**Resultado:** 
 
-<!-- Captura  -->
+<img width="924" height="275" alt="entrega 2" src="https://github.com/user-attachments/assets/deb25e4e-5d47-4677-b9ee-8f212f31e11f" />
+
 
 ---
 
@@ -50,10 +51,9 @@ Se implementaron tres nuevos endpoints en el archivo `index.js` del proyecto Sou
 **URL:** `http://localhost:3000/api/canciones/9999`  
 **Body → raw → JSON:** (mismo que prueba 2)
 
-**Resultado:** `404 Not Found`. La validación `result.rowCount === 0` detecta que el ID no existe y responde con el mensaje de error correspondiente.
+**Resultado:** 
 
-<!-- Captura -->
-
+<img width="928" height="193" alt="entrega 3" src="https://github.com/user-attachments/assets/b62f52c0-2a5a-4cba-a9a6-8e766cd4ae7e" />
 ---
 
 ## Prueba 4 — DELETE /api/playlists/1 (Baja lógica)
@@ -67,12 +67,16 @@ ALTER TABLE playlist ADD COLUMN activo BOOLEAN DEFAULT TRUE;
 **URL:** `http://localhost:3000/api/playlists/1`  
 **Sin body.**
 
-**Resultado:** `200 OK`. En lugar de borrar la fila, la API ejecuta `UPDATE playlist SET activo = FALSE WHERE id = $1`, implementando una baja lógica (soft delete). El registro sigue en la base de datos pero queda desactivado.
+**Resultado:**
 
-<!-- Captura -->
+<img width="922" height="216" alt="entrega 4" src="https://github.com/user-attachments/assets/7c6d8603-0016-4193-b187-e1c6f46719f5" />
 
 ---
 
 ## Tarea de Investigación
 
-En el proyecto ya usamos claves específicas para el caché del catálogo, por ejemplo `catalogo:page:1:limit:20`. En lugar de usar `redisClient.flushDb()` que borra toda la RAM, podríamos usar `redisClient.del(cacheKey)` para borrar únicamente esa clave del catálogo, dejando intactas las sesiones y demás datos guardados en Redis.#
+En el proyecto ya usamos claves específicas para el caché del catálogo, por ejemplo `catalogo:page:1:limit:20`. En lugar de usar `redisClient.flushDb()` que borra toda la RAM, podríamos usar `redisClient.del(cacheKey)` para borrar únicamente esa clave del catálogo, dejando intactas las sesiones y demás datos guardados en Redis.
+```
+const cacheKey = `catalogo:page:1:limit:20`;
+await redisClient.del(cacheKey);
+```
